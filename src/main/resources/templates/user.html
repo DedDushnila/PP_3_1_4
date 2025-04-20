@@ -3,9 +3,63 @@
 <head>
     <title>Spring Security Example</title>
 </head>
+ <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 20px;
+        }
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #d6d6d6;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+        h1, h2 {
+            color: #007bff;
+        }
+        .info {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logout {
+            display: block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: white;
+        }
+    </style>
+</head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
+<div class="container">
+    <h1>Личный кабинет</h1>
 
+    <h2>Ваши данные:</h2>
+    <p class="info"><strong>ID:</strong> <span th:text="${user.id}"></span></p>
+    <p class="info"><strong>Имя:</strong> <span th:text="${user.name}"></span></p>
+    <p class="info"><strong>Фамилия:</strong> <span th:text="${user.lastName}"></span></p>
+    <p class="info"><strong>Возраст:</strong> <span th:text="${user.age}"></span></p>
+    <p class="info"><strong>Имя пользователя (логин):</strong> <span th:text="${user.username}"></span></p>
+    <p class="info"><strong>Роли:</strong>
+        <span th:each="role : ${user.roles}" th:text="${role.name}"></span>
+    </p>
 
+    <button><a class="logout" th:href="@{/logout}">Выйти</a></button>
+</div>
 </body>
 </html>
