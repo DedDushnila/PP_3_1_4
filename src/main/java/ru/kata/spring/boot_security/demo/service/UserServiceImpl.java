@@ -53,12 +53,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         userRepository.save(user);
     }
 
-    @Override
-    public boolean deleteUser(Long id) {
+
+    @Transactional
+    public String deleteUser(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-            return true;
         }
-        return false;
+    return "redirect:/admin";
     }
 }
