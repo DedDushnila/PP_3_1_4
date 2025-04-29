@@ -58,7 +58,8 @@
         <input type="text" name="lastName" placeholder="Фамилия" th:value="${user.lastName}" required>
         <input type="number" name="age" placeholder="Возраст" th:value="${user.age}" required>
         <input type="text" name="username" placeholder="Имя пользователя (логин)" th:value="${user.username}" required>
-        <input type="password" name="password" placeholder="Новый пароль (если нужно изменить)" th:value="${user.password}" required>
+        <input type="password" name="password" placeholder="Новый пароль (если нужно изменить)">
+<!--        <input type="password" name="password" placeholder="Новый пароль (если нужно изменить)" th:value="${user.password}" required>-->
         <select name="roleIds" multiple>
             <option th:each="role : ${roles}"
                     th:value="${role.id}"
