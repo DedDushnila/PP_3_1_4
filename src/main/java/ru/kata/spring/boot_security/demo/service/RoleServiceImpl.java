@@ -8,6 +8,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.RoleRepository;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -25,6 +26,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public Set<Role> getRoleByUserId(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
@@ -32,16 +34,19 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    @Transactional
     public List<Role> getAllRoles() {
         return roleRepository.findAll();
     }
 
     @Override
+    @Transactional
     public Set<Role> getRolesByIds(List<Long> ids) {
         return new HashSet<>(roleRepository.findAllById(ids));
     }
 
     @Override
+    @Transactional
     public Role saveRole(Role role) {
         return roleRepository.save(role); // Сохраняем роль в базе данных
     }
