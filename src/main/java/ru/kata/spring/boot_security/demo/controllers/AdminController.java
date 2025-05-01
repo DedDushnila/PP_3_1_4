@@ -83,10 +83,6 @@ public class AdminController {
             existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
         }
 
-//        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-//            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-//        }
-
         existingUser.setRoles(roleService.getRolesByIds(roleIds));
 
         userService.updateUser(existingUser);
