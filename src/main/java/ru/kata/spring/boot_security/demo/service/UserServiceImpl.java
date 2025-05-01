@@ -1,8 +1,8 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,30 +27,33 @@ public class UserServiceImpl implements UserService {
         this.roleService = roleService;
     }
 
-
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
-    @Transactional
-    @Override
-    public User findUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
 
+    @Transactional
+    public User findUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Hibernate.initialize(user.getRoles());
+
+        return user;
+    }
 
     @Override
     @Transactional
     public List<User> getAllUsers() {
-        return userRepository.findAll();
+        return userRepository.findAllWithRoles();
     }
 
     @Override
     @Transactional
     public void saveUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Хешируем пароль перед сохранением
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
@@ -70,7 +73,6 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-
     @Override
     @Transactional
     public void updateUser(Long id, User updatedUser, List<Long> roleIds) {
@@ -88,7 +90,6 @@ public class UserServiceImpl implements UserService {
 
         existingUser.setRoles(roleService.getRolesByIds(roleIds));
 
-        // Сохраняем изменения
         userRepository.save(existingUser);
     }
 }

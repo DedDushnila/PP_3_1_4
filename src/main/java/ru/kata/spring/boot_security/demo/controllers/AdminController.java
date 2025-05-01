@@ -9,6 +9,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
@@ -25,6 +26,7 @@ public class AdminController {
         this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
+
 
     @GetMapping
     public String adminPage(Model model) {
