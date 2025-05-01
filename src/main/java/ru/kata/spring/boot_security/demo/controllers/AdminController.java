@@ -9,7 +9,6 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Set;
 
@@ -35,16 +34,20 @@ public class AdminController {
         return "admin";
     }
 
-    @GetMapping("/addUser")
-    public String showAddUserForm(Model model) {
-        model.addAttribute("user", new User());
-        model.addAttribute("roles", roleService.getAllRoles());
-        return "addUser";
-    }
     @PostMapping("/addUser")
-    public String addUser(@ModelAttribute User user,@RequestParam List<Long> roleIds) {
+    public String addUser(@RequestParam String username,
+                          @RequestParam String name,
+                          @RequestParam int age,
+                          @RequestParam String password,
+                          @RequestParam List<Long> roleIds) {
         Set<Role> roles = roleService.getRolesByIds(roleIds);
+        User user = new User();
+        user.setUsername(username);
+        user.setName(name);
+        user.setAge(age);
+        user.setPassword(passwordEncoder.encode(password));
         user.setRoles(roles);
+
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -72,6 +75,7 @@ public class AdminController {
                              @ModelAttribute User user,
                              @RequestParam List<Long> roleIds) {
         userService.updateUser(id, user, roleIds);
+
         return "redirect:/admin";
     }
 
