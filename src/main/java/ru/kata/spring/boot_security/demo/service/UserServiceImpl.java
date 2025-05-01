@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -17,10 +18,13 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
 
@@ -64,5 +68,27 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+
+    @Override
+    @Transactional
+    public void updateUser(Long id, User updatedUser, List<Long> roleIds) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        existingUser.setName(updatedUser.getName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setAge(updatedUser.getAge());
+        existingUser.setUsername(updatedUser.getUsername());
+
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        existingUser.setRoles(roleService.getRolesByIds(roleIds));
+
+        // Сохраняем изменения
+        userRepository.save(existingUser);
     }
 }

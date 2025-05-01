@@ -69,24 +69,7 @@ public class AdminController {
     public String updateUser(@RequestParam("id") Long id,
                              @ModelAttribute User user,
                              @RequestParam List<Long> roleIds) {
-        User existingUser = userService.findUserById(id);
-
-        if (existingUser != null) {
-            existingUser.setName(user.getName());
-            existingUser.setLastName(user.getLastName());
-            existingUser.setAge(user.getAge());
-            existingUser.setUsername(user.getUsername());
-//            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        }
-
-        existingUser.setRoles(roleService.getRolesByIds(roleIds));
-
-        userService.updateUser(existingUser);
-
+        userService.updateUser(id, user, roleIds);
         return "redirect:/admin";
     }
 
@@ -105,5 +88,4 @@ public class AdminController {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
-
 }

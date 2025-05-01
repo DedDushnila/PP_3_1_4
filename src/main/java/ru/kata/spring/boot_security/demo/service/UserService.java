@@ -9,6 +9,7 @@ public interface UserService {
     List<User> getAllUsers(); // Получение списка всех пользователей
     void saveUser(User user); // Сохранение нового пользователя
     void updateUser(User user); // Обновление существующего пользователя
-//    String  deleteUser(Long id); // Удаление пользователя
     boolean deleteUser(Long id);
+    void updateUser(Long id, User updateUser, List<Long> roleIds);
+
 }
