@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @Column(name = "age")
     private Integer age;
 
+    @Column(name = "email")
+    private String email;
+
     // исправить на LAZY
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
@@ -43,7 +46,7 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(Long id, String username, String password, Set<Role> roles, String name, String lastName, Integer age) {
+    public User(Long id, String username, String password, Set<Role> roles, String name, String lastName, Integer age, String email) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -51,6 +54,15 @@ public class User implements UserDetails {
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {
@@ -156,10 +168,11 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", username='" + username + '\'' +
                 ", password='" + password + '\'' +
-                ", roles=" + roles +
                 ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
+                ", email='" + email + '\'' +
+                ", roles=" + roles +
                 '}';
     }
 }

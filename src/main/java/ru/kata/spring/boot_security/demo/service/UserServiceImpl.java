@@ -1,6 +1,5 @@
 package ru.kata.spring.boot_security.demo.service;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,13 +34,9 @@ public class UserServiceImpl implements UserService {
 
 
     @Transactional
-    public User findUserById(Long id) {
-        User user = userRepository.findById(id)
+    public User findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
-
-        Hibernate.initialize(user.getRoles());
-
-        return user;
     }
 
     @Override
@@ -57,12 +52,6 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-
-    @Override
-    @Transactional
-    public void updateUser(User user) {
-        userRepository.save(user);
-    }
 
     @Transactional
     public boolean deleteUser(Long id) {
@@ -82,7 +71,9 @@ public class UserServiceImpl implements UserService {
         existingUser.setName(updatedUser.getName());
         existingUser.setLastName(updatedUser.getLastName());
         existingUser.setAge(updatedUser.getAge());
+        existingUser.setEmail(updatedUser.getEmail());
         existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setEmail(updatedUser.getEmail());
 
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));

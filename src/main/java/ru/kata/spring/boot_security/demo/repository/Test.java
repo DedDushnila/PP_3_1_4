@@ -39,6 +39,7 @@ public class Test implements CommandLineRunner {
         user.setName("Regular");
         user.setLastName("User");
         user.setAge(25);
+        user.setEmail("user@email.ru");
         user.setRoles(Set.of(roleUser));
 
         userService.saveUser(user);
@@ -50,6 +51,7 @@ public class Test implements CommandLineRunner {
         admin.setName("Admin");
         admin.setLastName("Administrator");
         admin.setAge(30);
+        admin.setEmail("admin@email.ru");
         admin.setRoles(Set.of(roleAdmin));
 
         userService.saveUser(admin);

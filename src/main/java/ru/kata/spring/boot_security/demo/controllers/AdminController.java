@@ -1,16 +1,17 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
+import java.security.Principal;
 import java.util.List;
-import java.util.Set;
+
 
 @Controller
 @RequestMapping("/admin")
@@ -18,36 +19,30 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
-    private final PasswordEncoder passwordEncoder;
 
-    public AdminController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
+    @Autowired
+    public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
-        this.passwordEncoder = passwordEncoder;
     }
 
 
     @GetMapping
-    public String adminPage(Model model) {
+    public String adminPage(Model model, Principal principal) {
+        model.addAttribute("user", new User());
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("roles", roleService.getAllRoles());
+
+        if (principal != null) {
+            User loggedUser = userService.findUserByUsername(principal.getName());
+            model.addAttribute("user", loggedUser);
+        }
+
         return "admin";
     }
 
     @PostMapping("/addUser")
-    public String addUser(@RequestParam String username,
-                          @RequestParam String name,
-                          @RequestParam int age,
-                          @RequestParam String password,
-                          @RequestParam List<Long> roleIds) {
-        Set<Role> roles = roleService.getRolesByIds(roleIds);
-        User user = new User();
-        user.setUsername(username);
-        user.setName(name);
-        user.setAge(age);
-        user.setPassword(passwordEncoder.encode(password));
-        user.setRoles(roles);
-
+    public String addUser(@ModelAttribute("user") User user) {
         userService.saveUser(user);
         return "redirect:/admin";
     }
@@ -58,40 +53,21 @@ public class AdminController {
         return "users";
     }
 
-    @GetMapping("/updateUser/{id}")
-    public String updateUser(@PathVariable("id") Long id, Model model) {
-        User user = userService.findUserById(id);
-        if (user != null) {
-            model.addAttribute("user", user);
-            model.addAttribute("roles", roleService.getAllRoles());
-            return "updateUser";
-        } else {
-            return "redirect:/admin";
-        }
-    }
+    @PostMapping("/updateUser/{id}")
+    public String updateUser(
+            @PathVariable Long id,
+            @ModelAttribute User updatedUser,
+            @RequestParam("roles") List<Long> roleIds) {
 
-    @PostMapping("/updateUser")
-    public String updateUser(@RequestParam("id") Long id,
-                             @ModelAttribute User user,
-                             @RequestParam List<Long> roleIds) {
-        userService.updateUser(id, user, roleIds);
-
+        userService.updateUser(id, updatedUser, roleIds);
         return "redirect:/admin";
     }
 
-    @GetMapping("/deleteUser/{id}")
-    public String showDeleteUserForm(@PathVariable("id") Long id, Model model) {
-        User user = userService.findUserById(id);
-        if (user != null) {
-            model.addAttribute("user", user);
-            return "deleteUser";
-        }
-        return "redirect:/admin";
-    }
 
-    @PostMapping("/deleteUser")
-    public String deleteUser(@RequestParam("id") Long id) {
+    @PostMapping("/deleteUser/{id}")
+    public String deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
         return "redirect:/admin";
     }
+
 }
