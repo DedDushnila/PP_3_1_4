@@ -12,4 +12,5 @@ public interface UserService {
     void updateUser(Long id, UserDTO userDto);
     User getUserById(Long id);
     void updatedUser(Long id, User updatedUser, List<Long> roleIds);
+    User createUserFromDto(UserDTO userDto);
 }

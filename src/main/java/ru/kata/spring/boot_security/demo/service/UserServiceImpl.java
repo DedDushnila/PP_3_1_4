@@ -3,10 +3,12 @@ package ru.kata.spring.boot_security.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -99,5 +101,26 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+
+    @Override
+    @Transactional
+    public User createUserFromDto(UserDTO userDto) {
+        User user = new User();
+        user.setUsername(userDto.getUsername());
+        user.setName(userDto.getName());
+        user.setLastName(userDto.getLastName());
+        user.setAge(userDto.getAge());
+        user.setEmail(userDto.getEmail());
+
+        if (userDto.getPassword() != null && !userDto.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+
+        Set<Role> roles = roleService.getRolesByIds(userDto.getRoles());
+        user.setRoles(roles);
+
+        return userRepository.save(user);
     }
 }

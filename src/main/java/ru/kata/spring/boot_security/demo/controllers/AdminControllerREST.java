@@ -54,21 +54,9 @@ public class AdminControllerREST {
 
     @PostMapping("/users")
     public ResponseEntity<User> addUser(@RequestBody UserDTO userDto) {
-        User user = new User();
-        user.setUsername(userDto.getUsername());
-        user.setName(userDto.getName());
-        user.setLastName(userDto.getLastName());
-        user.setAge(userDto.getAge());
-        user.setEmail(userDto.getEmail());
-        user.setPassword(userDto.getPassword());
-
-        Set<Role> roles = roleService.getRolesByIds(userDto.getRoles());
-        user.setRoles(roles);
-
-        userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(user);
+        User createdUser = userService.createUserFromDto(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
-
 
 
     @PutMapping("/users/{id}")
