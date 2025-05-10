@@ -59,7 +59,7 @@ public class AdminController {
             @ModelAttribute User updatedUser,
             @RequestParam("roles") List<Long> roleIds) {
 
-        userService.updateUser(id, updatedUser, roleIds);
+        userService.updatedUser(id, updatedUser, roleIds);
         return "redirect:/admin";
     }
 

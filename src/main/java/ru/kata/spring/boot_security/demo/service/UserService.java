@@ -9,6 +9,7 @@ public interface UserService {
     List<User> getAllUsers();
     void saveUser(User user);
     boolean deleteUser(Long id);
-    void updateUser(Long id, User updateUser, List<Long> roleIds);
-
+    void updateUser(Long id, UserDTO userDto);
+    User getUserById(Long id);
+    void updatedUser(Long id, User updatedUser, List<Long> roleIds);
 }

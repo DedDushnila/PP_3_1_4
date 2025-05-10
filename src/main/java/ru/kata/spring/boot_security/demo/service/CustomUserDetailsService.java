@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findUserWithRolesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
 
-        Hibernate.initialize(user.getRoles()); // 🔹 Принудительно загружаем роли
+        Hibernate.initialize(user.getRoles());
 
         return user;
     }
