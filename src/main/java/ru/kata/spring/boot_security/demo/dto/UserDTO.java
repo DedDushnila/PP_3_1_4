@@ -1,11 +1,11 @@
-package ru.kata.spring.boot_security.demo.service;
+package ru.kata.spring.boot_security.demo.dto;
 
 import java.util.List;
 
 
 public class UserDTO {
 
-    private Long id;
+
     private String username;
     private String password;
     private String name;
@@ -16,13 +16,7 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getUsername() {
         return username;
@@ -80,17 +74,4 @@ public class UserDTO {
         this.roles = roles;
     }
 
-    @Override
-    public String toString() {
-        return "UserDTO{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", email='" + email + '\'' +
-                ", roles=" + roles +
-                '}';
-    }
 }

@@ -2,6 +2,7 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,7 +11,7 @@ import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api")
 public class UserControllerREST {
 
     private final UserService userService;
@@ -21,6 +22,7 @@ public class UserControllerREST {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<User> getAuthenticatedUser(Authentication authentication) {
         User user = userService.findUserByUsername(authentication.getName());
         return ResponseEntity.ok(user);

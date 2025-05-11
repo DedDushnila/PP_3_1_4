@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repository.UserRepository;
 
-import javax.transaction.Transactional;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -21,7 +20,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserWithRolesByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));

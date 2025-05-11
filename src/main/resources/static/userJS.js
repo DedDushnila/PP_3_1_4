@@ -7,7 +7,7 @@ document.getElementById('logoutForm').addEventListener('submit', async (event) =
         });
 
         if (response.ok) {
-            localStorage.clear(); // Очистка данных
+            localStorage.clear();
             sessionStorage.clear();
             window.location.href = '/login-page';
         }
@@ -17,7 +17,7 @@ document.getElementById('logoutForm').addEventListener('submit', async (event) =
 });
 
 function loadCurrentUser() {
-    fetch('/api/user')
+    fetch('/api/current-user', { credentials: 'include' })
         .then(response => response.json())
         .then(user => {
             const currentUserEmail = document.getElementById('currentUserEmail');
@@ -25,7 +25,6 @@ function loadCurrentUser() {
             currentUserEmail.dataset.userId = user.id;
             document.getElementById('currentUserRoles').textContent =
                 user.roles.map(role => role.name.replace('ROLE_', '')).join(', ');
-
             renderUsersTable(user);
         })
         .catch(error => {

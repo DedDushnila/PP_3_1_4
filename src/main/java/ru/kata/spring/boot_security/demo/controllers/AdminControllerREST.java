@@ -3,20 +3,20 @@ package ru.kata.spring.boot_security.demo.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
-import ru.kata.spring.boot_security.demo.service.UserDTO;
+import ru.kata.spring.boot_security.demo.dto.UserDTO;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Set;
 
 @RestController
-@RequestMapping("/api/admin")
+@RequestMapping("/api")
+@PreAuthorize("hasRole('ADMIN')")
 public class AdminControllerREST {
 
     private final UserService userService;
@@ -30,7 +30,6 @@ public class AdminControllerREST {
 
 
     @GetMapping("/current-user")
-    @Transactional
     public ResponseEntity<User> getCurrentUser(Authentication authentication) {
         User currentUser = userService.findUserByUsername(authentication.getName());
         if (currentUser != null) {
@@ -42,13 +41,15 @@ public class AdminControllerREST {
 
     @GetMapping("/users")
     public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(userService.getAllUsers());
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
 
     @GetMapping("/roles")
     public ResponseEntity<List<Role>> getAllRoles() {
-        return ResponseEntity.ok(roleService.getAllRoles());
+        List<Role> roles = roleService.getAllRoles();
+        return new ResponseEntity<>(roles, HttpStatus.OK);
     }
 
 

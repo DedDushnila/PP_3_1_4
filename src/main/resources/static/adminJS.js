@@ -7,7 +7,7 @@ const deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'));
 
 
 function loadCurrentUser() {
-    fetch('/api/admin/current-user')
+    fetch('/api/current-user')
         .then(response => response.json())
         .then(user => {
             const currentUserEmail = document.getElementById('currentUserEmail');
@@ -24,7 +24,7 @@ function loadCurrentUser() {
 
 
 function loadUsers() {
-    fetch('/api/admin/users', {
+    fetch('/api/users', {
         credentials: "include"
     })
         .then(response => {
@@ -104,7 +104,7 @@ function renderUsersTable(users) {
 
 
 function loadUserInfo() {
-    fetch('/api/admin/current-user', {
+    fetch('/api/current-user', {
         credentials: 'include'
     })
         .then(response => {
@@ -135,7 +135,7 @@ function loadUserInfo() {
 
 async function loadRoles() {
     try {
-        const response = await fetch('/api/admin/roles', {
+        const response = await fetch('/api/roles', {
             credentials: 'include'
         });
 
@@ -153,7 +153,7 @@ async function loadRoles() {
 
 async function openEditModal(userId) {
     try {
-        const response = await fetch(`/api/admin/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             credentials: 'include'
         });
 
@@ -204,7 +204,7 @@ async function openEditModal(userId) {
 
 async function openDeleteModal(userId) {
     try {
-        const response = await fetch(`/api/admin/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             credentials: 'include'
         });
 
@@ -255,7 +255,7 @@ async function handleEditUserSubmit(event) {
     };
 
     try {
-        const response = await fetch(`/api/admin/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -272,7 +272,7 @@ async function handleEditUserSubmit(event) {
 
         if (userId === currentUserId && currentUserId) {
             const hasAdminRole = selectedRoles.some(role => role.name === 'ADMIN' || role.name === 'ROLE_ADMIN');
-            window.location.href = hasAdminRole ? '/admin' : '/user';
+            window.location.href = hasAdminRole ? '/admin.html' : '/user.html';
         }
     } catch (error) {
         console.error('Error updating user:', error);
@@ -289,7 +289,7 @@ async function handleDeleteUserSubmit(event) {
     const userId = formData.get('id');
 
     try {
-        const response = await fetch(`/api/admin/users/${userId}`, {
+        const response = await fetch(`/api/users/${userId}`, {
             method: 'DELETE',
             credentials: 'include'
         });
@@ -332,7 +332,7 @@ async function handleNewUserSubmit(event) {
     };
 
     try {
-        const response = await fetch('/api/admin/users', {
+        const response = await fetch('/api/users', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',
@@ -360,7 +360,7 @@ async function handleNewUserSubmit(event) {
 async function loadRolesToSelect() {
     try {
         console.log('Loading roles into New User form...');
-        const response = await fetch('/api/admin/roles', {
+        const response = await fetch('/api/roles', {
             credentials: 'include'
         });
 
